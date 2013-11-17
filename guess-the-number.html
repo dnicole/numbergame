@@ -1,0 +1,82 @@
+<html>
+<head>
+  <title>Guess the Number!</title>
+</head>
+<body>
+	<label>Pick a Number from 1-100:</label>
+    <br />
+    <label id="response"></label>
+    <br />
+    <input id="user-input" type="text" /></input>
+    <input id="submit-button" type="button" value="Guess" />
+    <input id="ng-button" type="button" value="New Game" /><br />
+    <label id="wins-text">Games Won: </label>
+    <label id="wins"> </label><br />
+    <label id="warning"></label>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+var Game = function (landmineGo){
+
+  var secretNumber = parseInt(Math.random() * 100, 10) + 1;
+  var landmine = parseInt(Math.random() * 100, 10) + 1;
+  var wins = 0;
+  
+  var guess = function (input){
+    // ends the game immediately if user inputs the landmine number
+    if (input == landmine) {
+      $('#warning').hide();
+      $('#response').text("BOOM! you lose! Enter a number or just hit 'New Game' to start a new game.");
+      // sets new secret/landmine numbers for new game
+      secretNumber = parseInt(Math.random() * 100, 10) + 1;
+      landmine = parseInt(Math.random() * 100, 10) + 1;
+      console.log("new numbers set because you lost and are a loser; try doing better")
+    }
+    // if secret number is lower/higher than user input, continue game with hints and warnings
+    else if (input > secretNumber) {
+      $('#response').text('Try a lower number!');
+      $('#warning').show();
+    }
+    else if (input < secretNumber) {
+      $('#response').text('Try a higher number!');
+      $('#warning').show();
+    }
+    // if secret umber equals user input, user wins the game, hooray!
+    else { 
+      $('#response').show();
+      $('#response').text("Hooray, you won! Enter a number or just hit 'New Game' to start a new game."); 
+      $('#wins').text(wins += 1)
+      // sets numbers for next game on win
+      secretNumber = parseInt(Math.random() * 100, 10) + 1;
+      landmine = parseInt(Math.random() * 100, 10) + 1;
+      console.log("new numbers set because you are amazing at this!")
+      // no need for warnings when you've just achieved victory
+      $('#warning').hide();
+    }
+    // gives a warning about proximity to landmine; note -> make this less precise to make game harder
+    var distance = Math.abs(input - landmine);
+    $('#warning').text("Careful, you are " + distance + " away from the landmine.");
+  }
+  // new game button logic is here
+  this.guess = guess;
+  $('#ng-button').on('click', function(){
+    $('#response').text('New Game!');
+    $('#user-input').val('');
+    secretNumber = parseInt(Math.random() * 100, 10) + 1;
+    landmine = parseInt(Math.random() * 100, 10) + 1;
+    console.log("i made you a new game!")
+  });
+};
+// submitting a guess starts the game/changes the warnings/hints
+var game = new Game();
+$('#submit-button').on('click', function () {
+  var input = $('#user-input').val();
+  game.guess(input); 
+  console.log("you entered " + input + "!")
+});
+
+</script>
+
+</body>
+</html>
